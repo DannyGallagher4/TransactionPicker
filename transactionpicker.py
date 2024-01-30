@@ -20,7 +20,8 @@ def get_transactions():
 # Returns list of 10 transactions with highest fees
 @app.route('/get_ten_highest_fees', methods=['GET'])
 def get_ten_highest_fees():
-    response = {} # placeholder
+    sorted_list = sorted(transactions_list, key=lambda x: x["Fee"], reverse=True)
+    response = sorted_list[:10]
     return jsonify(response), 200
 
 
@@ -29,7 +30,8 @@ def get_ten_highest_fees():
 # Returns list of 10 transactions with lowest fees
 @app.route('/get_ten_lowest_fees', methods=['GET'])
 def get_ten_lowest_fees():
-    response = {} # placeholder
+    sorted_list = sorted(transactions_list, key=lambda x: x["Fee"])
+    response = sorted_list[:10]
     return jsonify(response), 200
 
 
@@ -39,10 +41,20 @@ def get_ten_lowest_fees():
 # Returns second highest total fee sum after picking 10 transactions
 @app.route('/get_next_highest_total', methods=['GET'])
 def get_next_highest_total():
-    response = {} # placeholder
+    sorted_list = sorted(transactions_list, key=lambda x: x["Fee"], reverse=True)
+    response = sorted_list[:9]
+    response.append(sorted_list[10])
     return jsonify(response), 200
-    
 
+
+@app.route('/get_avg_fee', methods=['GET'])
+def get_avg_fee():
+    sum = 0
+    for lst in transactions_list:
+        sum += lst["Fee"]
+    avg = sum/len(transactions_list)
+    response = {"Average Fee": avg}
+    return jsonify(response), 200
 
 
 # Run app
