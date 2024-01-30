@@ -44,7 +44,10 @@ def get_next_highest_total():
     sorted_list = sorted(transactions_list, key=lambda x: x["Fee"], reverse=True)
     response = sorted_list[:9]
     response.append(sorted_list[10])
-    return jsonify(response), 200
+    sum = 0
+    for data in response:
+        sum += data["Fee"]
+    return jsonify({"Next Highest Total": sum}), 200
 
 
 @app.route('/get_avg_fee', methods=['GET'])
@@ -54,6 +57,18 @@ def get_avg_fee():
         sum += lst["Fee"]
     avg = sum/len(transactions_list)
     response = {"Average Fee": avg}
+    return jsonify(response), 200
+
+
+@app.route('/get_avg_transaction', methods=['GET'])
+def get_avg_transaction():
+    sum = 0
+    for lst in transactions_list:
+        sentence = lst["Data"]
+        data = sentence.split(" ")
+        sum += float(data[1])
+    avg = sum/len(transactions_list)
+    response = {"Average Transaction": avg}
     return jsonify(response), 200
 
 
